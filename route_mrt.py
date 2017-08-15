@@ -1,6 +1,8 @@
 #! -*- coding:utf-8 -*-
 import csv
 from file_path_name import *
+import argparse
+
 
 def generate_route():
     route_file = open(mrt_route_name, 'r')
@@ -105,10 +107,16 @@ def match_station():
     pass
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mrt_file_name", type=str, help='(mrt_yyyymmdd.csv)')
+    args = parser.parse_args()
+
     route_list = generate_route()
     route_num = dict()
     for i in range(len(route_list)):
         route_num[str(i)] = 0
+
+    mrt_file_name = args.mrt_file_name
     data_list = get_mrt_data(mrt_file_name)
 
     out_list, out_v_list = get_top_k_outset(data_list)
