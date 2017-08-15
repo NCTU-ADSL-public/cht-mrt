@@ -152,10 +152,14 @@ if __name__ == '__main__':
 #route
     route_output_file = open('mrt_analysis/route_' + mrt_file_name.split('.')[0] + '_output.csv', 'w')
     csv_writer = csv.writer(route_output_file, delimiter=',')
+    trans_account = 0
     for data in data_list:
         temp = str(match_route(route_list, data[3], data[4]))
         if temp != '-1':
             route_num[temp] += 1
+        else:
+            trans_account += 1
+    print(trans_account)
     print('route count:')
     route_ans = dict()
     for i, route in enumerate(route_list):
