@@ -52,7 +52,7 @@ def get_mrt_data(name):
 
 
 def get_top_k_outset(data_list, k=None):
-    print('top ' + str(k) + ' hot outset:')
+    # print('top ' + str(k) + ' hot outset:')
     result_dict = dict()
     for data in data_list:
         if result_dict.has_key(data[3]):
@@ -62,13 +62,13 @@ def get_top_k_outset(data_list, k=None):
 
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
-    for i in range(0, len(new_key_list)):
-        print(str(new_key_list[i])+' '+str(new_value_list[i]))
+    # for i in range(0, len(new_key_list)):
+    #     print(str(new_key_list[i])+' '+str(new_value_list[i]))
     return (new_key_list[:k], new_value_list[:k])
 
 
 def get_top_k_destination(data_list, k=None):
-    print('top ' + str(k) + ' hot destination:')
+    # print('top ' + str(k) + ' hot destination:')
     result_dict = dict()
     for data in data_list:
         if result_dict.has_key(data[4]):
@@ -78,8 +78,8 @@ def get_top_k_destination(data_list, k=None):
 
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
-    for i in range(0, len(new_key_list)):
-        print(str(new_key_list[i])+' '+str(new_value_list[i]))
+    # for i in range(0, len(new_key_list)):
+    #     print(str(new_key_list[i])+' '+str(new_value_list[i]))
     return (new_key_list[:k], new_value_list[:k])
 
 
@@ -114,7 +114,7 @@ def group_data_by_hour(data_list):
     for record in data_list:
         temp_date = datetime.fromtimestamp(float(record[1]))
         try:
-            data_list_by_hour[temp_date.day-6].append(record)
+            data_list_by_hour[temp_date.hour-6].append(record)
         except:
             continue
     return data_list_by_hour
