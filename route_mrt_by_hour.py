@@ -117,8 +117,6 @@ def group_data_by_hour(data_list):
             data_list_by_hour[temp_date.day-6].append(record)
         except:
             continue
-    print(data_list_by_hour[0])
-    exit()
     return data_list_by_hour
 
 
