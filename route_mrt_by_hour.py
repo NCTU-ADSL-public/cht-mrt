@@ -124,7 +124,7 @@ def group_data_by_hour(data_list):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("mrt_file_name", type=str, help='(mrt_yyyymmdd.csv)')
+    parser.add_argument("mrt_file_name", type=str, help='(mrt_yyyymmdd.csv)', default=mrt_file_name)
     args = parser.parse_args()
 
     route_list = generate_route()
