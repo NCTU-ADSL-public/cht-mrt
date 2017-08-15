@@ -126,23 +126,23 @@ if __name__ == '__main__':
     #     print(str(new_key_list[i])+' '+str(new_value_list[i]))
 
     # path
-    path_output_file = open('mrt_analysis/path_output.csv', 'w')
+    path_output_file = open('mrt_analysis/' + mrt_file_name.split('.')[0] + 'path_output.csv', 'w')
     csv_writer = csv.writer(path_output_file, delimiter=',')
     for i in range(len(new_key_list)):
         csv_writer.writerow([new_key_list[i], new_value_list[i]])
 
-    out_output_file = open('mrt_analysis/out_output.csv', 'w')
+    out_output_file = open('mrt_analysis/' + mrt_file_name.split('.')[0] + 'out_output.csv', 'w')
     csv_writer = csv.writer(out_output_file, delimiter=',')
     for i in range(len(out_list)):
         csv_writer.writerow([out_list[i], out_v_list[i]])
 
-    des_output_file = open('mrt_analysis/des_output.csv', 'w')
+    des_output_file = open('mrt_analysis/' + mrt_file_name.split('.')[0] + 'des_output.csv', 'w')
     csv_writer = csv.writer(des_output_file, delimiter=',')
     for i in range(len(des_list)):
         csv_writer.writerow([des_list[i], des_v_list[i]])
 
 #route
-    route_output_file = open('mrt_analysis/route_output.csv', 'a')
+    route_output_file = open('mrt_analysis/' + mrt_file_name.split('.')[0] + 'route_output.csv', 'w')
     csv_writer = csv.writer(route_output_file, delimiter=',')
     for data in data_list:
         temp = str(match_route(route_list, data[3], data[4]))
