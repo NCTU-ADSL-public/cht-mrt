@@ -1,10 +1,9 @@
 #! -*- coding:utf-8 -*-
 import csv
-
+from file_path_name import *
 
 def generate_route():
-    route_name = 'data/mrt_route.csv'
-    route_file = open(route_name, 'r')
+    route_file = open(mrt_route_name, 'r')
     content = route_file.readlines()
     data_list = list()
     for record in content:
@@ -38,7 +37,7 @@ def generate_route():
     return route_list
 
 def get_mrt_data(name):
-    mrt_name = 'output/'+name
+    mrt_name = source_data_path + name
     mrt_file = open(mrt_name, 'r')
     content = mrt_file.readlines()
     data_list = list()
