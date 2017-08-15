@@ -107,7 +107,7 @@ if __name__ == '__main__':
     route_num = dict()
     for i in range(len(route_list)):
         route_num[str(i)] = 0
-    data_list = get_mrt_data('mrt_20170106.csv')
+    data_list = get_mrt_data(mrt_file_name)
 
     out_list, out_v_list = get_top_10_outset(data_list)
     des_list, des_v_list = get_top_10_destination(data_list)
