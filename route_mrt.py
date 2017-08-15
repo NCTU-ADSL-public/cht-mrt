@@ -121,14 +121,14 @@ if __name__ == '__main__':
 
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
-    print('path')
-    for i in range(len(new_key_list)):
-        print(str(new_key_list[i])+' '+str(new_value_list[i]))
+    # print('path')
+    # for i in range(len(new_key_list)):
+    #     print(str(new_key_list[i])+' '+str(new_value_list[i]))
 
     # path
     path_output_file = open('mrt_analysis/path_output.csv', 'w')
     csv_writer = csv.writer(path_output_file, delimiter=',')
-    for i in range(10):
+    for i in range(len(new_key_list)):
         csv_writer.writerow([new_key_list[i], new_value_list[i]])
 
     out_output_file = open('mrt_analysis/out_output.csv', 'w')
@@ -153,6 +153,6 @@ if __name__ == '__main__':
     for i, route in enumerate(route_list):
         key_name = route['outset']+'-'+route['destination']
         route_ans[key_name]= route_num[str(i)]
-        print(key_name),
-        print(route_num[str(i)])
+        # print(key_name),
+        # print(route_num[str(i)])
         csv_writer.writerow([key_name, route_num[str(i)]])
