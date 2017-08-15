@@ -47,8 +47,9 @@ def get_mrt_data(name):
         data_list.append(record)
     return data_list
 
-def get_top_10_outset(data_list):
-    print('top 10 hot outset:')
+
+def get_top_k_outset(data_list, k=None):
+    print('top ' + str(k) + ' hot outset:')
     result_dict = dict()
     for data in data_list:
         if result_dict.has_key(data[3]):
@@ -58,13 +59,13 @@ def get_top_10_outset(data_list):
 
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
-    for i in range(0, 11):
+    for i in range(0, len(new_key_list)):
         print(str(new_key_list[i])+' '+str(new_value_list[i]))
-    return (new_key_list[:10], new_value_list[:10])
+    return (new_key_list[:k], new_value_list[:k])
 
 
-def get_top_10_destination(data_list):
-    print('top 10 hot destination:')
+def get_top_k_destination(data_list, k=None):
+    print('top ' + str(k) + ' hot destination:')
     result_dict = dict()
     for data in data_list:
         if result_dict.has_key(data[4]):
@@ -74,9 +75,10 @@ def get_top_10_destination(data_list):
 
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
-    for i in range(0, 11):
+    for i in range(0, len(new_key_list)):
         print(str(new_key_list[i])+' '+str(new_value_list[i]))
-    return (new_key_list[:10], new_value_list[:10])
+    return (new_key_list[:k], new_value_list[:k])
+
 
 def match_od(data_list, out, des):
     result = list()
@@ -109,8 +111,8 @@ if __name__ == '__main__':
         route_num[str(i)] = 0
     data_list = get_mrt_data(mrt_file_name)
 
-    out_list, out_v_list = get_top_10_outset(data_list)
-    des_list, des_v_list = get_top_10_destination(data_list)
+    out_list, out_v_list = get_top_k_outset(data_list)
+    des_list, des_v_list = get_top_k_destination(data_list)
     result_dict = dict()
     for out in out_list:
         for des in des_list:
@@ -120,7 +122,7 @@ if __name__ == '__main__':
     new_key_list = sorted(result_dict, key=result_dict.__getitem__, reverse=True)
     new_value_list = sorted(result_dict.values(), reverse=True)
     print('path')
-    for i in range(10):
+    for i in range(len(new_key_list)):
         print(str(new_key_list[i])+' '+str(new_value_list[i]))
 
     # path
