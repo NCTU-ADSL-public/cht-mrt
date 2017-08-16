@@ -5,6 +5,24 @@ import argparse
 from datetime import datetime
 
 
+def preprocess_mrt_station():
+    mrt_station_csv_name = './data/mrt_station_entrance_new.csv'
+    mrt_station_file = open(mrt_station_csv_name)
+    raw_mrt_station_data = mrt_station_file.readlines()
+    temp = str()
+    mrt_station_data = list()
+    for i in raw_mrt_station_data:
+        temp_list = i.replace('\r\n', '').split(',')
+        if temp_list[1]!= temp:
+            temp_list[3] = float(temp_list[3])
+            temp_list[4] = float(temp_list[4])
+            mrt_station_data.append(temp_list)
+            temp = temp_list[1]
+        else:
+            continue
+    return mrt_station_data
+
+
 def generate_route():
     route_file = open(mrt_route_name, 'r')
     content = route_file.readlines()
