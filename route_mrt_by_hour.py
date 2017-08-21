@@ -4,23 +4,55 @@ from file_path_name import *
 import argparse
 from datetime import datetime
 
+from station_match import get_station_match
 
-def preprocess_mrt_station():
-    mrt_station_csv_name = './data/mrt_station_entrance_new.csv'
-    mrt_station_file = open(mrt_station_csv_name)
-    raw_mrt_station_data = mrt_station_file.readlines()
-    temp = str()
-    mrt_station_data = list()
-    for i in raw_mrt_station_data:
-        temp_list = i.replace('\r\n', '').split(',')
-        if temp_list[1]!= temp:
-            temp_list[3] = float(temp_list[3])
-            temp_list[4] = float(temp_list[4])
-            mrt_station_data.append(temp_list)
-            temp = temp_list[1]
+from preprocess_mrt_station import preprocess_mrt_station
+
+def output_inter_path(mrt_file_name):
+    mrt_user_csv_name = '../source/'+str(mrt_file_name)
+    # mrt_station_list, mrt_station_dict = preprocess_mrt_station()
+    mrt_station_list, mrt_station_dict, station_routeid_dict, route_name_match = get_station_match()
+    mrt_path_file_name = mrt_file_name.split('_')
+    mrt_path_file_name = mrt_path_file_name[0]+'_path_'+mrt_path_file_name[1]
+    mrt_path_csv_name = '../source/'+mrt_path_file_name
+
+    # mrt_out_put_csv_name = 'mrt_path.js'
+    r_file = open(mrt_user_csv_name, 'r')
+    data_list = r_file.readlines()
+    path_r_file = open(mrt_path_csv_name, 'r')
+    path_data_list = path_r_file.readlines()
+    ans_list = list()
+    temp = list()
+    inter_station_list = list()
+    trans_list = list()
+    for i, record in enumerate(data_list):
+        temp_record_list = record.decode('big5').encode('utf8').replace('\r\n', '').split(',')
+        temp_path_record_list = path_data_list[i].decode('big5').encode('utf8').replace('\r\n', '').split(',')[3:-1]
+        temp_record_list[1] = int(temp_record_list[1])
+        temp_record_list[2] = int(temp_record_list[2])
+        if not temp:
+            temp = temp_record_list
+            path_list = temp_path_record_list
         else:
-            continue
-    return mrt_station_data
+            if (temp[0]!=temp_record_list[0]) or ((temp_record_list[1]-temp[2])>1200) or (temp[4]!=temp_record_list[3]):
+                temp_path_list = list()
+                for path in path_list:
+                    temp_path_list.append(station_routeid_dict[path])
+                if inter_station_list:
+                    trans_list.append([mrt_station_dict[temp[3]], mrt_station_dict[temp[4]], inter_station_list, temp_path_list])
+                ans_list.append(temp)
+                temp = temp_record_list
+                inter_station_list = list()
+            else:
+                path_list = path_list[:-1] + temp_path_record_list
+                inter_station_list.append(mrt_station_dict[temp_record_list[3]])
+                temp[2] = temp_record_list[2]
+                temp[4] = temp_record_list[4]
+    else:
+        temp.append(inter_station_list)
+        ans_list.append(temp)
+
+    return (ans_list,trans_list)
 
 
 def generate_route():
@@ -149,7 +181,10 @@ if __name__ == '__main__':
         route_num[str(i)] = 0
 
     mrt_file_name = args.mrt_file_name
-    data_list = get_mrt_data(mrt_file_name)
+    # data_list = get_mrt_data(mrt_file_name)
+    # data_list_by_hour = group_data_by_hour(data_list)
+
+    data_list,trans_list = output_inter_path(mrt_file_name)
     data_list_by_hour = group_data_by_hour(data_list)
 
     for day, data_list in enumerate(data_list_by_hour):
@@ -182,4 +217,11 @@ if __name__ == '__main__':
         csv_writer = csv.writer(des_output_file, delimiter=',')
         for i in range(len(des_list)):
             csv_writer.writerow([des_list[i], des_v_list[i]])
+
+    js_name = 'mrt_analysis/trans_data_'+mrt_file_name+'.data'
+    w_file = open(js_name, 'w')
+    write_content = str(trans_list)
+    w_file.write(write_content)
+    w_file.close()
+
 
