@@ -3,6 +3,7 @@ import csv
 from file_path_name import *
 import argparse
 from datetime import datetime
+import uniout
 
 from station_match import get_station_match
 
@@ -25,7 +26,10 @@ def output_inter_path(mrt_file_name):
     temp = list()
     inter_station_list = list()
     trans_list = list()
+    trans_dict = dict()
     for i, record in enumerate(data_list):
+        if (i%1000 == 2):
+            print(i)
         temp_record_list = record.decode('big5').encode('utf8').replace('\r\n', '').split(',')
         temp_path_record_list = path_data_list[i].decode('big5').encode('utf8').replace('\r\n', '').split(',')[3:-1]
         temp_record_list[1] = int(temp_record_list[1])
@@ -38,10 +42,23 @@ def output_inter_path(mrt_file_name):
                 temp_path_list = list()
                 for path in path_list:
                     temp_path_list.append(station_routeid_dict[path])
-                if inter_station_list:
-                    trans_list.append([mrt_station_dict[temp[3]], mrt_station_dict[temp[4]], inter_station_list, temp_path_list])
+                od_name = str(mrt_station_dict[temp[3]]) + '_' + str(mrt_station_dict[temp[4]])
+                if not inter_station_list:
+                    temp_inter_str = '-1'
+                else:
+                    temp_inter_str = str(inter_station_list[0])
+                    for station in inter_station_list[1:]:
+                        temp_inter_str = temp_inter_str + '_' + str(station)
+                if not trans_dict.has_key(od_name):
+                    trans_dict[od_name] = dict()
+                if not trans_dict[od_name].has_key(temp_inter_str):
+                    trans_dict[od_name][temp_inter_str] = [1, temp_path_list]
+                else:
+                    trans_dict[od_name][temp_inter_str][0] += 1
+                # trans_list.append([mrt_station_dict[temp[3]], mrt_station_dict[temp[4]], inter_station_list, temp_path_list])
                 ans_list.append(temp)
                 temp = temp_record_list
+                path_list = temp_path_record_list
                 inter_station_list = list()
             else:
                 path_list = path_list[:-1] + temp_path_record_list
@@ -51,8 +68,11 @@ def output_inter_path(mrt_file_name):
     else:
         temp.append(inter_station_list)
         ans_list.append(temp)
-
-    return (ans_list,trans_list)
+    for i in trans_dict.keys():
+        total = float(sum([j[0] for j in trans_dict[i].values()]))
+        for j in trans_dict[i].keys():
+            trans_dict[i][j].insert(1, "{0:.3f}".format(trans_dict[i][j][0]/total))
+    return (ans_list, trans_dict)
 
 
 def generate_route():
